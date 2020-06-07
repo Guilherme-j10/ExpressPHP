@@ -3,14 +3,14 @@
     namespace src;
 
     class TreatmentRoute
-    {
+    {   
 
         public function Route($route, $request)
         {
             $params = [];
 
             if($route == '/'){
-                $route = '/';
+                return $route = '/';
             }else{
                 $r_explode = array_filter(explode('/', $route));
                 $splash = explode('/:/', $route);
@@ -63,6 +63,25 @@
                     return $route = $r_explode[1];
                 }
             }
+        }
+
+        public function takeof_doubleDotos($parametros)
+        {
+            for($j = 0; $j < count($parametros); $j++){
+                $new_key = preg_replace('/:/', '', key($parametros));
+                next($parametros);
+    
+                $values = array_values($parametros);
+                $parametros[$new_key] = $values[$j];
+            }
+    
+            foreach($parametros as $chave => $valor){
+                if(preg_match('/:/', $chave)){
+                    unset($parametros[$chave]);
+                }
+            }
+
+            return $parametros;
         }
 
         public function treat_param($param, $request_param)

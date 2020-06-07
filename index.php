@@ -12,10 +12,8 @@
     require_once "vendor/autoload.php";
 
     use src\Express;
-    use src\Functions;
 
     $app = new Express();
-    $func = new Functions();
 
     $users = [
         "Guilherme" => 'campos',
@@ -24,17 +22,26 @@
         "Felipe" => 'Françoso'
     ];
 
-    $app->get('/v1/key', function($request, $response) use($users, $func){
-        $data = [
-            $users,
-            $request['METHOD_TYPE']
-        ];
-
-        $func->retorna($data);
+    $app->get('/', function($request, $response) {
+        $response['redirect']('recebe_redirect');
     });
 
-    $app->get('/v1/key/:nome', function($request, $response) use($users, $func){
-        $func->retorna($users[$request["body"][":nome"]]);
+    $app->get('/recebe_redirect', function($request, $response) {
+        $response['send']('redirecionamento do root "/" recebido');
+    });
+
+    $app->get('/listagem', function($request, $response) use($users){
+        $data = [
+            'Dados' => $users,
+            'METHOD_TYPE' => $request['METHOD_TYPE']
+        ];
+
+        $response['json']($data);
+    });
+
+    $app->post('/postagem', function($request, $response) use($users) {
+        $users[$request['body']['nome']] = $request['body']['sobrenome'];
+        $response['json']($users);
     });
     
   

@@ -126,3 +126,84 @@
     //         }
     //     }
     // }
+
+    // $param = 'contatos/:nome/:sobrenome/:email';
+    // $request_param = 'contatos/Guilherme/Campos/campos@gmail.com';
+
+    // $param_array = str_split($param);
+    // if($param_array[0] == '/'){
+    //     $param_array[0] = '';
+
+    //     $param = implode('', $param_array);
+    // }
+
+    // $string = $param;
+    // $string_array = explode('/', $string);
+
+    // $request = $request_param;
+    // $request_array = explode('/', $request);
+
+    // if(count($string_array) == count($request_array)){
+    //     $param = '';
+    //     $valor = '';
+    
+    //     foreach($string_array as $key => $value){
+    //         if(preg_match('/:/', $value)){
+    //             $valor = $value;
+    //         }
+            
+    //         $param .= array_search($valor, $string_array);
+    //         $param_array = str_split($param);
+    //     }
+    
+    //     $parametros = [];
+    
+    //     for($i = 0; $i < count($param_array); $i++){
+    //         $parametros[$string_array[$param_array[$i]]] = $request_array[$param_array[$i]];
+    //     }
+
+    //     for($j = 0; $j < count($parametros); $j++){
+    //         $new_key = preg_replace('/:/', '', key($parametros));
+    //         next($parametros);
+
+    //         $values = array_values($parametros);
+    //         $parametros[$new_key] = $values[$j];
+    //     }
+
+    //     foreach($parametros as $chave => $valor){
+    //         if(preg_match('/:/', $chave)){
+    //             unset($parametros[$chave]);
+    //         }
+    //     }
+
+    //     print_r($parametros);
+
+    // }else{
+    //     return false;
+    // }
+
+
+    // $parametros = [
+    //     ":nome" => "Guilherme",
+    //     ":sobrenome" => "Campos"
+    // ];
+
+    // function takeof_doubleDotos($parametros){
+    //     for($j = 0; $j < count($parametros); $j++){
+    //         $new_key = preg_replace('/:/', '', key($parametros));
+    //         next($parametros);
+
+    //         $values = array_values($parametros);
+    //         $parametros[$new_key] = $values[$j];
+    //     }
+
+    //     foreach($parametros as $chave => $valor){
+    //         if(preg_match('/:/', $chave)){
+    //             unset($parametros[$chave]);
+    //         }
+    //     }
+
+    //     print_r($parametros);
+    // }
+
+    // takeof_doubleDotos($parametros);
