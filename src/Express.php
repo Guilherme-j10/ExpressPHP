@@ -12,6 +12,7 @@
         protected $route_aplication_separete;
         protected $simple_route_aplication;
         protected $get_request;
+        protected $type_aplication;
 
         protected $response_params = [];
         protected $request_params = [];
@@ -114,7 +115,7 @@
 
         public function type_aplication($type){
             if($type == 'web' OR $type == 'api'){
-                return $type;
+                $this->type_aplication = $type;
             }else{
                 echo 'type aplication invalid, web or api';
             }
@@ -135,6 +136,12 @@
 
         public function error($route_request, $func)
         {
+            if($this->type_aplication == 'web') {
+                $this->response_params['return_arv'] = function($arv){
+                    include($arv);
+                };
+            }
+
             if($route_request !== $this->verify_route($route_request)){
                 $func($this->response_params);
             }

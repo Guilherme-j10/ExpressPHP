@@ -64,10 +64,7 @@
     });
 
     $app->error($_GET['aplication'], function($response) {
-        $response['send']('
-            <h1>Página nao encontrada</h1>
-            <a href="listagem">voltar para a listagem</a>
-        ');
+        $response['json']('Url, request not found');
     });
 
     
