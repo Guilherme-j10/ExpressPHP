@@ -9,7 +9,7 @@
         {
             $params = [];
 
-            if($route == '/'){
+            if($route == '/' OR $route == ''){
                 return $route = '/';
             }else{
                 $r_explode = array_filter(explode('/', $route));
@@ -143,5 +143,23 @@
             }else{
                 return $string;
             }
+        }
+
+        public function get_q($queries)
+        {
+            $explode = explode('&', $queries);
+            $implode = implode(' ', $explode);
+            $explode_bar = explode('/?', $implode);
+            $implode_string = implode(' ', $explode_bar);
+            $queries_array = explode(' ', $implode_string);
+
+            $queries_string = [];
+
+            foreach($queries_array as $chave){
+                $separete = explode('=', $chave);
+                $queries_string[$separete[0]] = $separete[1];
+            }
+
+            return $queries_string;
         }
     }

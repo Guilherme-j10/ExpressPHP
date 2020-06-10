@@ -7,12 +7,12 @@
 
     class Express extends Router
     {
-
         protected $method_request;
         protected $route_aplication_separete;
         protected $simple_route_aplication;
         protected $get_request;
         protected $type_aplication;
+        protected $global_route;
 
         protected $response_params = [];
         protected $request_params = [];
@@ -20,10 +20,17 @@
 
         public function __construct()
         {   
-            $this->get_request = $_GET['aplication'];
+            $split_route = str_split($_GET['aplication']);
+
+            if(count($split_route) > 1){
+                $split_route[0] = '';
+                $this->global_route = implode('', $split_route);
+            }
+
+            $this->get_request = $this->global_route;
 
             $this->method_request = $_SERVER["REQUEST_METHOD"];
-            $this->simple_route_aplication = $_GET["aplication"] ?? '/';
+            $this->simple_route_aplication = $this->global_route ?? '/';
             $this->route_aplication_separete = explode('/', $this->simple_route_aplication);
 
             $this->request_params["METHOD_TYPE"] = $this->method_request;
@@ -43,7 +50,7 @@
         { 
             $this->params($route, $this->get_request); //tem que vir antes do route ser reescrevido pelo método Route
 
-            $route = $this->Route($route, $this->get_request); 
+            $route = $this->Route($route, $this->get_request);
 
             if($this->method_request == 'GET' AND $route == $this->simple_route_aplication){
                 $this->all_routes[] = $route;
@@ -106,6 +113,7 @@
         {
             $this->request_params["params"] = $this->treat_param($route, $request); 
             $this->request_params["params"] = $this->takeof_doubleDotos($this->request_params["params"]);
+            $this->request_params['queries'] = $this->get_q($_SERVER['QUERY_STRING']);
         }
 
         public function request_body(){
@@ -119,6 +127,10 @@
             }else{
                 echo 'type aplication invalid, web or api';
             }
+        }
+
+        public function getRoute_request(){
+            return $this->global_route;
         }
 
         public function verify_route($route_request)
@@ -140,6 +152,10 @@
                 $this->response_params['return_arv'] = function($arv){
                     include($arv);
                 };
+            }
+            
+            if($route_request == ''){
+                $route_request = '/';
             }
 
             if($route_request !== $this->verify_route($route_request)){

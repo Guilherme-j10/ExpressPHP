@@ -2,18 +2,19 @@
 
     /**
      * Restrictions:
-     *      a rota ('root') '/' não aceita parametros
+     *      The route ('root') '/' don't accept parameters
      *      não pode haver barra no final das rotas
-     *      Exemplo:
-     *          Errado: 'contatos/empresa/'
-     *          Certo: 'contatos/empresa'
+     *      don't can gave bar in the final of routes
+     *      Exemple:
+     *          Wrong: 'contatos/empresa/'
+     *          Right: 'contatos/empresa'
      */
 
     require_once "vendor/autoload.php";
 
-    use src\Express as App;
+    use src\Express as ExpressPHP;
 
-    $app = new App();
+    $app = new ExpressPHP();
 
     $app->type_aplication('api');
 
@@ -24,16 +25,16 @@
         "Felipe" => 'Françoso'
     ];
 
-    $app->get('/', function($request, $response) {
-        $response['redirect']('recebe_redirect');
+    $app->get('/', function($request, $response){
+        $response['json']('root');
     });
 
-    $app->get('/contatos/empresa', function($request, $response) {
-        $response['send']('composto');
+    $app->get('/home/:nome', function($request, $response){
+        $response['json']($request['params']['nome']);
     });
 
-    $app->get('/recebe_redirect', function($request, $response) {
-        $response['send']('redirecionamento do root "/" recebido');
+    $app->get('/queries', function($request, $response) {
+        $response['json']($request['queries']['nome']);
     });
 
     $app->get('/listagem', function($request, $response) use($users){
@@ -63,8 +64,9 @@
         $response['json']($users);
     });
 
-    $app->error($_GET['aplication'], function($response) {
-        $response['json']('Url, request not found');
+    //rota de erro
+    $app->error($app->getRoute_request(), function($response) {
+        $response['json']('url nao econtrada');
     });
 
     
