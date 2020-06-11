@@ -1,15 +1,4 @@
 <?php
-
-    /**
-     * Restrictions:
-     *      The route ('root') '/' don't accept parameters
-     *      não pode haver barra no final das rotas
-     *      don't can gave bar in the final of routes
-     *      Exemple:
-     *          Wrong: 'contatos/empresa/'
-     *          Right: 'contatos/empresa'
-     */
-
     require_once "vendor/autoload.php";
 
     use src\Express as ExpressPHP;
@@ -25,8 +14,28 @@
         "Felipe" => 'Françoso'
     ];
 
-    $app->get('/', function($request, $response){
-        $response['json']('root');
+    $app->get('/arquivos', function($request, $response){
+        $response['send']('
+            <h1>Clique aqui para fazer o download do index html</h1>
+            <a href="downloads/index"> Bixar arquivo index </a><br>
+            <a href="downloads/texto"> Bixar texto </a>
+        ');
+    });
+
+    $app->get('/downloads/:nome_arv', function($request, $response){
+        $arv = $request['params']['nome_arv'];
+
+        switch ($arv) {
+            case 'index':
+                $response['sendFile']('downloads/', 'index.html');
+            break;
+            case 'texto':
+                $response['sendFile']('downloads/', 'text_test.txt');
+            break;
+            default:
+                echo 'file name invalid.';
+            break;
+        }
     });
 
     $app->get('/home/:nome', function($request, $response){
@@ -34,7 +43,7 @@
     });
 
     $app->get('/queries', function($request, $response) {
-        $response['json']($request['queries']['nome']);
+        $response['json']($request['queries']['sobrenome']);
     });
 
     $app->get('/listagem', function($request, $response) use($users){
@@ -46,7 +55,6 @@
         $response['json']($data);
     });
 
-    //usar o curl para fazer o envio dos dados
     $app->post('/postagem', function($request, $response) use($users) {
         $users[$request['body']['nome']] = $request['body']['sobrenome'];
         $response['json']($users);
@@ -64,11 +72,6 @@
         $response['json']($users);
     });
 
-    //rota de erro
     $app->error($app->getRoute_request(), function($response) {
         $response['json']('url nao econtrada');
     });
-
-    
-    
-  

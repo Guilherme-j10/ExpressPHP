@@ -4,7 +4,6 @@
 
     class TreatmentRoute
     {   
-
         public function Route($route, $request)
         {
             $params = [];

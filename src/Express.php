@@ -35,15 +35,7 @@
 
             $this->request_params["METHOD_TYPE"] = $this->method_request;
 
-            $this->response_params["send"] = function($infotmation){
-                echo $infotmation;
-            };
-            $this->response_params["json"] = function($infotmation){
-                echo json_encode($infotmation);
-            };
-            $this->response_params["redirect"] = function($link){
-                header('Location: '.$link);
-            };
+            $this->methods_response();
         }
 
         public function get($route, $func)
@@ -116,12 +108,14 @@
             $this->request_params['queries'] = $this->get_q($_SERVER['QUERY_STRING']);
         }
 
-        public function request_body(){
+        public function request_body()
+        {
             $body_request = file_get_contents("php://input");
             $this->request_params["body"] = json_decode($body_request, true);
         }
 
-        public function type_aplication($type){
+        public function type_aplication($type)
+        {
             if($type == 'web' OR $type == 'api'){
                 $this->type_aplication = $type;
             }else{
@@ -129,7 +123,8 @@
             }
         }
 
-        public function getRoute_request(){
+        public function getRoute_request()
+        {
             return $this->global_route;
         }
 
@@ -161,5 +156,37 @@
             if($route_request !== $this->verify_route($route_request)){
                 $func($this->response_params);
             }
+        }
+
+        public function methods_response()
+        {
+            $this->response_params["send"] = function($infotmation){
+                echo $infotmation;
+            };
+
+            $this->response_params["json"] = function($infotmation){
+                echo json_encode($infotmation);
+            };
+
+            $this->response_params["redirect"] = function($link){
+                header('Location: '.$link);
+            };
+
+            $this->response_params["sendFile"] = function($dirname, $filename){
+                $arquivo = filter_var($filename, FILTER_SANITIZE_STRING);
+                $arquivo = basename($arquivo);
+
+                $caminho = $dirname.$filename;
+
+                if(!file_exists($caminho))
+                    die('Not found');
+
+                header('Content-type: octet/stream');
+                header('Content-disposition: attachment; filename="'.$arquivo.'";'); 
+                header('Content-Length: '.filesize($caminho));
+
+                readfile($caminho);
+                exit;
+            };
         }
     }
