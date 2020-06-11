@@ -1,7 +1,7 @@
 <?php
     require_once "vendor/autoload.php";
 
-    use src\Express as ExpressPHP;
+    use elevenstack\Express\Express as ExpressPHP;
 
     $app = new ExpressPHP();
 
@@ -55,6 +55,7 @@
         $response['json']($data);
     });
 
+    //usar o curl para fazer o envio dos dados
     $app->post('/postagem', function($request, $response) use($users) {
         $users[$request['body']['nome']] = $request['body']['sobrenome'];
         $response['json']($users);
@@ -72,6 +73,7 @@
         $response['json']($users);
     });
 
+    //rota de erro
     $app->error($app->getRoute_request(), function($response) {
         $response['json']('url nao econtrada');
     });
