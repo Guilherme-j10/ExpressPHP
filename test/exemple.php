@@ -1,7 +1,7 @@
 <?php
     require_once "vendor/autoload.php";
 
-    use elevenstack\Express\Express as ExpressPHP;
+    use elevenstack\expressphp\Express as ExpressPHP;
 
     $app = new ExpressPHP();
 

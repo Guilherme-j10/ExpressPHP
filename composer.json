@@ -7,6 +7,7 @@
     "keywords": [
         "Router",
         "Roteamento",
+        "elevenstack",
         "express",
         "Expressphp"
     ],
@@ -19,7 +20,7 @@
     ],
     "autoload":{
         "psr-4":{
-            "elevenstack\\ExpressPHP\\": "src/"
+            "elevenstack\\expressphp\\": "src/"
         }
     },
     "require": {

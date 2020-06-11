@@ -1,6 +1,6 @@
 <?php
 
-    namespace elevenstack\Express;
+    namespace elevenstack\expressphp;
 
     class TreatmentRoute
     {   

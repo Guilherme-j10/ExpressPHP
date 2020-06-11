@@ -1,9 +1,9 @@
 <?php
 
-    namespace elevenstack\Express;
+    namespace elevenstack\expressphp;
     error_reporting(0);
 
-    use elevenstack\Express\TreatmentRoute as Router;
+    use elevenstack\expressphp\TreatmentRoute as Router;
 
     class Express extends Router
     {
