@@ -13,6 +13,7 @@
         protected $get_request;
         protected $type_aplication;
         protected $global_route;
+        protected $namespace;
 
         protected $response_params = [];
         protected $request_params = [];
@@ -38,6 +39,11 @@
             $this->methods_response();
         }
 
+        public function namespace($spacename)
+        {
+            $this->namespace = $spacename;
+        }   
+
         public function get($route, $func)
         { 
             $this->params($route, $this->get_request); //tem que vir antes do route ser reescrevido pelo método Route
@@ -47,7 +53,7 @@
             if($this->method_request == 'GET' AND $route == $this->simple_route_aplication){
                 $this->all_routes[] = $route;
 
-                $func($this->request_params, $this->response_params);
+                $this->call_func_methods($func);
             }else{
                 $this->all_routes[] = $route;
             }
@@ -63,7 +69,7 @@
                 $this->request_body();
                 $this->all_routes[] = $route;
                 
-                $func($this->request_params, $this->response_params);
+                $this->call_func_methods($func);
             }else{
                 $this->all_routes[] = $route;
             }
@@ -79,7 +85,7 @@
                 $this->request_body();
                 $this->all_routes[] = $route;
 
-                $func($this->request_params, $this->response_params);
+                $this->call_func_methods($func);
             }else{
                 $this->all_routes[] = $route;
             }
@@ -95,9 +101,28 @@
                 $this->request_body();
                 $this->all_routes[] = $route;
 
-                $func($this->request_params, $this->response_params);
+                $this->call_func_methods($func);
             }else{
                 $this->all_routes[] = $route;
+            }
+        }
+
+        public function call_func_methods($func)
+        {
+            if(is_callable($func)){
+                $func($this->request_params, $this->response_params);
+            }else{
+                $explode_in_dots = explode(':', $func);
+                $controller = $explode_in_dots[0];
+                $method = $explode_in_dots[1];
+
+                $formate = explode('/', $this->namespace);
+                $formate_use = implode('\\', $formate);
+
+                $controller = $formate_use.$controller;
+                $controller = new $controller;
+
+                call_user_func_array([$controller, $method], [$this->request_params]);
             }
         }
 
@@ -154,7 +179,21 @@
             }
 
             if($route_request !== $this->verify_route($route_request)){
-                $func($this->response_params);
+                if(is_callable($func)){
+                    $func($this->response_params);
+                }else{
+                    $explode_in_dots = explode(':', $func);
+                    $controller = $explode_in_dots[0];
+                    $method = $explode_in_dots[1];
+    
+                    $formate = explode('/', $this->namespace);
+                    $formate_use = implode('\\', $formate);
+    
+                    $controller = $formate_use.$controller;
+                    $controller = new $controller;
+    
+                    call_user_func_array([$controller, $method], [$this->request_params]);
+                }
             }
         }
 

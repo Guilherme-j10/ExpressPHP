@@ -128,9 +128,11 @@
             $string = $route;
             $string_array = explode('/', $string);
 
+            $count = count(array_filter($string_array));
+
             $verify = str_split($string);
             if(in_array(':', $verify)){
-                for ($i=0; $i <= count($string_array); $i++) { 
+                for ($i=0; $i <= $count; $i++) { 
                     if(preg_match('/:/', $string_array[$i])){
                         unset($string_array[$i]);
                     }
