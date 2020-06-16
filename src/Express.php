@@ -18,6 +18,7 @@
         protected $response_params = [];
         protected $request_params = [];
         protected $all_routes = [];
+        protected $http_code = [100,101,200,201,202,203,204,205,206,300,301,302,303,304,305,307,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,501,502,503,504,505];
 
         public function __construct()
         {   
@@ -122,7 +123,7 @@
                 $controller = $formate_use.$controller;
                 $controller = new $controller;
 
-                call_user_func_array([$controller, $method], [$this->request_params]);
+                call_user_func_array([$controller, $method], [$this->request_params, $this->response_params]);
             }
         }
 
@@ -199,16 +200,30 @@
 
         public function methods_response()
         {
-            $this->response_params["send"] = function($infotmation){
-                echo $infotmation;
-            };
+            $this->response_params["send"] = function($information, $code = '200'){
+                if(in_array($code, $this->http_code)){
+                    header("HTTP/1.0 {$code}", true, $code);
+                    echo $information;
+                }else{
+                    echo "http code invalid";
+                }
+            }; 
 
-            $this->response_params["json"] = function($infotmation){
-                echo json_encode($infotmation);
-            };
+            $this->response_params["json"] = function($information, $code = '200'){
+                if(in_array($code, $this->http_code)){
+                    header("HTTP/1.0 {$code}", true, $code);
+                    echo json_encode($information);
+                }else{
+                    echo json_encode("http code invalid");
+                }
+            }; 
 
             $this->response_params["redirect"] = function($link){
                 header('Location: '.$link);
+            };
+
+            $this->response_params["status_code"] = function(){
+                echo http_response_code();
             };
 
             $this->response_params["sendFile"] = function($dirname, $filename){
