@@ -1,27 +1,36 @@
 <?php
 
     namespace elevenstack\expressphp;
-    error_reporting(0);
 
     use elevenstack\expressphp\TreatmentRoute as Router;
 
+    /**
+     * classe principal
+     * 
+     * @author Guilherme Campos <https://github.com/Guilherme-j10>
+     */
     class Express extends Router
     {
         protected $method_request;
-        protected $route_aplication_separete;
-        protected $simple_route_aplication;
+        protected Array $route_aplication_separete;
+        protected String $simple_route_aplication;
         protected $get_request;
-        protected $type_aplication;
+        protected String $type_aplication;
         protected $global_route;
-        protected $namespace;
+        protected String $namespace;
+        protected string $status_debug;
 
-        protected $response_params = [];
-        protected $request_params = [];
-        protected $all_routes = [];
-        protected $http_code = [100,101,200,201,202,203,204,205,206,300,301,302,303,304,305,307,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,501,502,503,504,505];
+        protected Array $response_params = [];
+        protected Array $request_params = [];
+        protected Array $all_routes = [];
+        protected Array $http_code = [100,101,200,201,202,203,204,205,206,300,301,302,303,304,305,307,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,501,502,503,504,505];
 
-        public function __construct()
+        public function __construct(Bool $debug_mode = false)
         {   
+            if($debug_mode == false){
+                error_reporting(0);
+            }
+
             $split_route = str_split($_GET['aplication']);
 
             if(count($split_route) > 1){
@@ -38,14 +47,14 @@
             $this->request_params["METHOD_TYPE"] = $this->method_request;
 
             $this->methods_response();
-        }
+        } 
 
-        public function namespace($spacename)
+        public function namespace(String $spacename):void
         {
             $this->namespace = $spacename;
         }   
 
-        public function get($route, $func)
+        public function get(String $route, $func):void
         { 
             $this->params($route, $this->get_request); //tem que vir antes do route ser reescrevido pelo método Route
 
@@ -60,7 +69,7 @@
             }
         }
 
-        public function post($route, $func)
+        public function post(String $route, $func):void
         { 
             $this->params($route, $this->get_request);
 
@@ -76,7 +85,7 @@
             }
         }
 
-        public function put($route, $func)
+        public function put(String $route, $func):void
         {
             $this->params($route, $this->get_request);
 
@@ -92,7 +101,7 @@
             }
         }
 
-        public function delete($route, $func)
+        public function delete(String $route, $func):void
         {
             $this->params($route, $this->get_request);
 
@@ -108,7 +117,7 @@
             }
         }
 
-        public function call_func_methods($func)
+        public function call_func_methods($func):void
         {
             if(is_callable($func)){
                 $func($this->request_params, $this->response_params);
@@ -127,20 +136,21 @@
             }
         }
 
-        public function params($route, $request)
+        public function params($route, $request): void
         {
             $this->request_params["params"] = $this->treat_param($route, $request); 
+
             $this->request_params["params"] = $this->takeof_doubleDotos($this->request_params["params"]);
             $this->request_params['queries'] = $this->get_q($_SERVER['QUERY_STRING']);
         }
 
-        public function request_body()
+        public function request_body(): void
         {
             $body_request = file_get_contents("php://input");
             $this->request_params["body"] = json_decode($body_request, true);
         }
 
-        public function type_aplication($type)
+        public function type_aplication(String $type): void
         {
             if($type == 'web' OR $type == 'api'){
                 $this->type_aplication = $type;
@@ -149,11 +159,19 @@
             }
         }
 
+        /**
+         * @return string
+         */
         public function getRoute_request()
         {
             return $this->global_route;
         }
 
+        /**
+         * @param mixed $route_request
+         * 
+         * @return mixed
+         */
         public function verify_route($route_request)
         {
             $valor = '';
@@ -167,7 +185,13 @@
             return $valor;
         }
 
-        public function error($route_request, $func)
+        /**
+         * @param mixed $route_request
+         * @param mixed $func
+         * 
+         * @return void
+         */
+        public function error($route_request, $func):void
         {
             if($this->type_aplication == 'web') {
                 $this->response_params['return_arv'] = function($arv){
@@ -198,7 +222,7 @@
             }
         }
 
-        public function methods_response()
+        public function methods_response(): void
         {
             $this->response_params["send"] = function($information, $code = '200'){
                 if(in_array($code, $this->http_code)){

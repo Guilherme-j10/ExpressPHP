@@ -2,8 +2,19 @@
 
     namespace elevenstack\expressphp;
 
+    /**
+     * Classe que realiza os tratamentos das rotas
+     * 
+     * @author Guilherme Campos <https://github.com/Guilherme-j10>
+     */
     class TreatmentRoute
     {   
+        /**
+         * @param mixed $route
+         * @param mixed $request
+         * 
+         * @return mixed
+         */
         public function Route($route, $request)
         {
             $params = [];
@@ -64,6 +75,11 @@
             }
         }
 
+        /**
+         * @param mixed $parametros
+         * 
+         * @return array
+         */
         public function takeof_doubleDotos($parametros)
         {
             for($j = 0; $j < count($parametros); $j++){
@@ -83,6 +99,12 @@
             return $parametros;
         }
 
+        /**
+         * @param mixed $param
+         * @param mixed $request_param
+         * 
+         * @return array
+         */
         public function treat_param($param, $request_param)
         {
             $param_array = str_split($param);
@@ -123,6 +145,11 @@
             }
         }
 
+        /**
+         * @param mixed $route
+         * 
+         * @return mixed
+         */
         public function takeOf_param($route)
         {
             $string = $route;
@@ -146,6 +173,11 @@
             }
         }
 
+        /**
+         * @param mixed $queries
+         * 
+         * @return array
+         */
         public function get_q($queries)
         {
             $explode = explode('&', $queries);

@@ -14,6 +14,12 @@
         "Felipe" => 'Françoso'
     ];
 
+    //exemplo de rota com status_code
+    $app->get('/status_code', function($request, $response){
+        $response['json']('ok', 200);
+    });
+
+    //exemplo de rotas para download
     $app->get('/arquivos', function($request, $response){
         $response['send']('
             <h1>Clique aqui para fazer o download do index html</h1>
@@ -38,6 +44,7 @@
         }
     });
 
+    //exemplo de rota com parametros
     $app->get('/home/:nome', function($request, $response){
         $response['json']($request['params']['nome']);
     });
@@ -55,7 +62,7 @@
         $response['json']($data);
     });
 
-    //usar o curl para fazer o envio dos dados
+    //exemlo de rotas simples
     $app->post('/postagem', function($request, $response) use($users) {
         $users[$request['body']['nome']] = $request['body']['sobrenome'];
         $response['json']($users);
@@ -75,5 +82,5 @@
 
     //rota de erro
     $app->error($app->getRoute_request(), function($response) {
-        $response['json']('url nao econtrada');
+        $response['json']('url nao econtrada', 404);
     });
