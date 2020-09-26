@@ -12,26 +12,30 @@
     class Express extends Router
     {
         protected $method_request;
-        protected Array $route_aplication_separete;
-        protected String $simple_route_aplication;
+        protected $route_aplication_separete;
+        protected $simple_route_aplication;
         protected $get_request;
-        protected String $type_aplication;
+        protected $type_aplication;
         protected $global_route;
-        protected String $namespace;
-        protected string $status_debug;
+        protected $namespace;
+        protected $status_debug;
 
-        protected Array $response_params = [];
-        protected Array $request_params = [];
-        protected Array $all_routes = [];
-        protected Array $http_code = [100,101,200,201,202,203,204,205,206,300,301,302,303,304,305,307,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,501,502,503,504,505];
+        protected $response_params = [];
+        protected $request_params = [];
+        protected $all_routes = [];
+        protected $http_code = [100,101,200,201,202,203,204,205,206,300,301,302,303,304,305,307,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,501,502,503,504,505];
 
-        public function __construct(Bool $debug_mode = false)
+        public function __construct(Bool $debug_mode = false, $server_type = 'apache')
         {   
             if($debug_mode == false){
                 error_reporting(0);
             }
 
-            $split_route = str_split($_GET['aplication']);
+            if($server_type == 'apache'){
+                $split_route = str_split($_GET['aplication']);
+            }elseif($server_type == 'nginx'){
+                $split_route = str_split($_SERVER['REQUEST_URI']);
+            }
 
             if(count($split_route) > 1){
                 $split_route[0] = '';
